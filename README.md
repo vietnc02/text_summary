@@ -23,9 +23,6 @@ numpy (thư viện hỗ trợ tính toán ma trận):
 bash
 Sao chép mã
 pip install numpy
-3. Lưu mã Python vào tệp
-Tạo một tệp Python mới, ví dụ: lexrank_summarizer.py.
-Sao chép và dán đoạn mã vào tệp.
 4. Chạy mã
 Mở terminal hoặc command prompt.
 Chạy tệp bằng lệnh:
