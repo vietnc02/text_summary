@@ -3,7 +3,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import networkx as nx
 
-
 def lexrank_summarizer(text, summary_ratio=0.3):
     nlp = spacy.load('en_core_web_sm')
     doc = nlp(text)
@@ -49,7 +48,6 @@ def lexrank_summarizer(text, summary_ratio=0.3):
 
     return summary_text, text, len(text.split()), len(summary_text.split()), 0, highlighted_text, summary_data
 
-
 def main():
     while True:
         print("\nOptions:")
@@ -60,18 +58,26 @@ def main():
         if choice == "1":
             # Nhập văn bản từ người dùng
             text = input("\nEnter your text: ")
-            try:
-                summary_ratio = float(input("Enter summary ratio (e.g., 0.3 for 30%): "))
-                if not 0 < summary_ratio <= 1:
-                    raise ValueError("Summary ratio must be between 0 and 1.")
-            except ValueError as e:
-                print(f"Invalid input. Defaulting to 0.3. Error: {e}")
-                summary_ratio = 0.3
+            
+            # Nhập tỷ lệ tóm tắt từ người dùng
+            while True:
+                try:
+                    summary_ratio = float(input("Enter summary ratio (e.g., 0.3 for 30%): "))
+                    if 0 < summary_ratio <= 1:
+                        break  # Đầu vào hợp lệ, thoát khỏi vòng lặp
+                    else:
+                        print("Please enter a number between 0 and 1.")
+                except ValueError:
+                    print("Invalid input. Please enter a valid number between 0 and 1.")
+            
+            summary_text, original_text, original_len, summary_len, _, highlighted_text, summary_data = lexrank_summarizer(text, summary_ratio)
 
-            # Gọi hàm tóm tắt
-            summary_text, original_text, original_len, summary_len, _, highlighted_text, _ = lexrank_summarizer(text, summary_ratio)
+            # Hiển thị kết quả xếp hạng các câu
+            print("\n--- Sentence Rankings ---")
+            for rank, (score, sentence) in enumerate(summary_data['ranked_sentences'], 1):
+                print(f"Rank {rank}: (Score: {score:.4f}) {sentence}")
 
-            # Hiển thị kết quả
+            # Hiển thị kết quả tóm tắt
             print("\n--- Summary ---")
             print(summary_text)
             print(f"\nOriginal Length: {original_len} words")
@@ -81,7 +87,6 @@ def main():
             break
         else:
             print("Invalid choice. Please try again.")
-
 
 if __name__ == "__main__":
     main()
